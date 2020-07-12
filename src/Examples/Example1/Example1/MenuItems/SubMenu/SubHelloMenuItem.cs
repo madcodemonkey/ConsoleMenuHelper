@@ -6,11 +6,11 @@ using Microsoft.Extensions.Configuration;
 namespace Example1
 {
     [ConsoleMenuItem("Hello2")]
-    public class SubHelloMenuItem1 : IConsoleMenuItem
+    public class SubHelloMenuItem : IConsoleMenuItem
     {
         private readonly IConfiguration _configuration;
 
-        public SubHelloMenuItem1(IConfiguration configuration)
+        public SubHelloMenuItem(IConfiguration configuration)
         {
             _configuration = configuration;
         }

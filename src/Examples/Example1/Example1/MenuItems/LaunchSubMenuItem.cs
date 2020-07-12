@@ -4,11 +4,11 @@ using ConsoleMenuHelper;
 namespace Example1
 {
     [ConsoleMenuItem("Hello1")]
-    public class HelloMenuItem3 : IConsoleMenuItem
+    public class LaunchSubMenuItem : IConsoleMenuItem
     {
         private readonly IConsoleMenuController _menuController;
 
-        public HelloMenuItem3(IConsoleMenuController menuController)
+        public LaunchSubMenuItem(IConsoleMenuController menuController)
         {
             _menuController = menuController;
         }

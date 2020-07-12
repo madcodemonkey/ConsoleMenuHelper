@@ -161,15 +161,25 @@ namespace ConsoleMenuHelper
                 
                 // Is the user's object registered in DI (e.g., an interface?)
                 // If it's not, try to create it and use DI to populate its constructor.
-                var userObject = _serviceProvider.GetService(menuItem.TheType) ?? 
-                    _serviceProvider.CreateInstance(menuItem.TheType);
+                var userObject = _serviceProvider.GetService(menuItem.TheType);
+                
+                if (userObject == null && menuItem.TheType.IsInterface)
+                {
+                    throw new ArgumentException($"You have decorated an interface, '{menuItem.TheType.FullName}', with the " +
+                        $"{nameof(ConsoleMenuItemAttribute)} attribute, but you didn't register a concrete class for it in the DI container!");
+                }
+
+                if (userObject == null)
+                {
+                    userObject = _serviceProvider.CreateInstance(menuItem.TheType);
+                }
 
                 if (userObject == null)
                 {
                     throw new ArgumentException($"Could not find the type named '{menuItem.TheType.FullName}' in the DI container and was unable to create it!");
                 }
                 
-                menuItem.Item =  _serviceProvider.CreateInstance(menuItem.TheType) as IConsoleMenuItem;
+                menuItem.Item = userObject as IConsoleMenuItem;
 
                 if (menuItem.Item == null)
                 {

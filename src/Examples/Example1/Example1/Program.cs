@@ -46,6 +46,10 @@ namespace Example1
             IConfiguration config = builder.Build();
 
             serviceCollection.AddSingleton<IConfiguration>(config);
+            serviceCollection.AddTransient<IAustinPowersMenuItem, AustinPowersMenuItem>();
+
+            // Overriding a built in component
+            // serviceCollection.AddSingleton<IExitConsoleMenuItem,ExitConsoleOverrideMenuItem>();
         }
     }
 }
