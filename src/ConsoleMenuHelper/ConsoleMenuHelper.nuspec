@@ -12,10 +12,9 @@
     <description>$description$</description>
     <releaseNotes>Initial release.</releaseNotes>
     <copyright>2020</copyright>
-    <tags>Console</tags>
-	
+    <tags>Console</tags>	
     <dependencies>
-        <dependency id="Microsoft.Extensions.DependencyInjection" version="3.1.5" />
+	    <dependency id="Microsoft.Extensions.DependencyInjection" version="3.1.5" />
     </dependencies>    	 	
   </metadata>
   <files>
