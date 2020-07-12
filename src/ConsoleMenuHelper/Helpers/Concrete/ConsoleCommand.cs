@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConsoleMenuHelper.Helpers
+namespace ConsoleMenuHelper
 {
     /// <summary>A wrapper around console commands.</summary>
     public class ConsoleCommand : IConsoleCommand

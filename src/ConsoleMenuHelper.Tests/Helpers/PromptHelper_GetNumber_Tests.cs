@@ -1,4 +1,3 @@
-using ConsoleMenuHelper.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

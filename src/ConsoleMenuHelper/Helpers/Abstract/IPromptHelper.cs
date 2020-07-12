@@ -1,4 +1,4 @@
-﻿namespace ConsoleMenuHelper.Helpers
+﻿namespace ConsoleMenuHelper
 {
     /// <summary>Helps with retrieving console input</summary>
     public interface IPromptHelper

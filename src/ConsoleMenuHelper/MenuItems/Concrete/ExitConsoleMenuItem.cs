@@ -13,5 +13,9 @@ namespace ConsoleMenuHelper
 
         /// <summary>The text to display on the menu.</summary>
         public string ItemText => "Exit";
+
+
+        /// <summary>Optional data from the attribute.</summary>
+        public string AttributeData { get; set; }
     }
 }

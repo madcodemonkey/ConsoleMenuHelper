@@ -12,5 +12,8 @@ namespace ConsoleMenuHelper
 
         /// <summary>This is the text used beside the number in the console application's menu</summary>
         string ItemText { get; }
+
+        /// <summary>Optional data from the attribute.</summary>
+        string AttributeData { get; set; }
     }
 }

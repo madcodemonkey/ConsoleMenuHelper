@@ -22,7 +22,11 @@ namespace ConsoleMenuHelper
         /// <summary>The name of the parent menu that should hold this item.</summary>
         public string MenuName { get; set; }
 
-        /// <summary>The number that should be used to select the item.  This is optional</summary>
+        /// <summary>An optional, selection number.  The menu will use this to determine the order that an item appears
+        /// in the menu.  If NOT specified, we sort by the <see cref="MenuName"/> property</summary>
         public int ItemNumber { get; set; }
+        
+        /// <summary>An optional, data string that will passed into the <see cref="IConsoleMenuItem"/> interfaces AttributeData property.</summary>
+        public string Data { get; set; }
     }
 }

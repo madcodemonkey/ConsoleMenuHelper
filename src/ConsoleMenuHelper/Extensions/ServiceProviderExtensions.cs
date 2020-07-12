@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace ConsoleMenuHelper
+namespace ConsoleMenuHelper.Extensions
 {
     /// <summary>Extensions used with the IServiceProvider (dependency injection framework).</summary>
     /// <remarks>Code was found here: https://stackoverflow.com/a/40334745/97803 and slightly altered.</remarks>

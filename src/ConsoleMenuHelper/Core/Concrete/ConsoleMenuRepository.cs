@@ -2,31 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using ConsoleMenuHelper.Helpers;
+using ConsoleMenuHelper.Extensions;
 
-namespace ConsoleMenuHelper
+namespace ConsoleMenuHelper.Core
 {
-    /// <summary>Controls the actual display of the menu and takes in user menu selections.</summary>
-    public class ConsoleMenuController : IConsoleMenuController
+    /// <summary>Holds and creates menus</summary>
+    public class ConsoleMenuRepository : IConsoleMenuRepository
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IConsoleCommand _console;
-        private readonly IPromptHelper _promptHelper;
         private readonly Dictionary<string, List<ConsoleMenuItemWrapper>> _menus = new Dictionary<string, List<ConsoleMenuItemWrapper>>();
-        private readonly Stack<List<ConsoleMenuItemWrapper>> _menuStack = new Stack<List<ConsoleMenuItemWrapper>>();
+        private readonly IServiceProvider _serviceProvider;
 
         /// <summary>Constructor</summary>
-        public ConsoleMenuController(IServiceProvider serviceProvider, IConsoleCommand console, IPromptHelper promptHelper)
+        public ConsoleMenuRepository(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _console = console;
-            _promptHelper = promptHelper;
         }
 
-        /// <summary>Displays a menu an prompts the user to select a menu item.</summary>
+        /// <summary>Loads a list of menus</summary>
         /// <param name="menuName">The name of the menu (it's NOT case sensitive)</param>
-        public async Task DisplayMenuAsync(string menuName)
+        public List<ConsoleMenuItemWrapper> LoadMenus(string menuName)
         {
             if (string.IsNullOrWhiteSpace(menuName))
             {
@@ -40,26 +34,14 @@ namespace ConsoleMenuHelper
                 throw new ArgumentException($"{menuName} not found!");
             }
 
-            _menuStack.Push(CreateMenuItems(_menus[normalizedMenuName]));
-
-            ShowOneMenu(true);
-
-            ConsoleMenuItemResponse response;
-
-            do
-            {
-                response = await DoMenuItemWorkAsync();
-            }
-            while (response.ExitMenu == false);
-
-            _menuStack.Pop();
+            return _menus[normalizedMenuName];
         }
 
-        
+
         /// <summary>Finds all the classes and interfaces that are decorated with the <see cref="ConsoleMenuItemAttribute"/> attribute.
         /// If it's a class, it makes sure they also implements the <see cref="IConsoleMenuItem"/> interface.  If it's an interface,
         /// it makes sure that it inherits from the <see cref="IConsoleMenuItem"/> interface.</summary>
-        public void FindWorkers(Assembly assembly)
+        public void AddMenuItems(Assembly assembly)
         {
             var typesWithHelpAttribute = assembly.HelpFindEverythingDecoratedWithThisAttribute(typeof(ConsoleMenuItemAttribute));
 
@@ -98,71 +80,18 @@ namespace ConsoleMenuHelper
             }
         }
 
-        /// <summary>Displays the menu and attempts to get a menu item select from the user.
-        /// If the user selects an item, it works is performed on that selected item.</summary>
-        private async Task<ConsoleMenuItemResponse> DoMenuItemWorkAsync()
-        {
-            int? userChoice = _promptHelper.GetNumber(null, 1);
-       
-            var result = new ConsoleMenuItemResponse(false, true);
-            
-            if (userChoice.HasValue)
-            {
-                var currentMenuItems = _menuStack.Peek();
-
-                var worker =  currentMenuItems.FirstOrDefault(w => w.ItemNumber == userChoice.Value);
-                if (worker == null)
-                {
-                    ShowOneMenu(true);
-                    _console.WriteLine("*******Please enter a valid number*******");
-                }
-                else
-                {
-                    result = await worker.Item.WorkAsync();
-                    ShowOneMenu(result.ClearScreen);
-                }
-            }
-            else
-            {
-                ShowOneMenu(true);
-                _console.WriteLine("*******Please enter a valid number*******");
-            }
-
-            return result;
-        }
-
-        /// <summary>Shows one menu.</summary>
-        /// <param name="clearScreen">Indicates if you would like to clear the screen.</param>
-        private void ShowOneMenu(bool clearScreen)
-        {
-            if (clearScreen)
-            {
-                _console.Clear();
-            }
-          
-            var currentMenuItems = _menuStack.Peek();
-
-            foreach (var menuItem in currentMenuItems)
-            {
-                _console.WriteLine($"{menuItem.ItemNumber}. {menuItem.Item.ItemText}");
-            }
-            
-            _console.WriteLine("Hit enter to clear the screen and refresh the menu");
-        }
-
-
         /// <summary>Instantiates the menu items using the dependency injection framework.</summary>
         /// <param name="menu">Menu items to create.</param>
-        private List<ConsoleMenuItemWrapper> CreateMenuItems(List<ConsoleMenuItemWrapper> menu)
+        public List<ConsoleMenuItemWrapper> CreateMenuItems(List<ConsoleMenuItemWrapper> menu)
         {
             foreach (var menuItem in menu)
             {
                 if (menuItem.Item != null) continue;
-                
+
                 // Is the user's object registered in DI (e.g., an interface?)
                 // If it's not, try to create it and use DI to populate its constructor.
                 var userObject = _serviceProvider.GetService(menuItem.TheType);
-                
+
                 if (userObject == null && menuItem.TheType.IsInterface)
                 {
                     throw new ArgumentException($"You have decorated an interface, '{menuItem.TheType.FullName}', with the " +
@@ -178,21 +107,24 @@ namespace ConsoleMenuHelper
                 {
                     throw new ArgumentException($"Could not find the type named '{menuItem.TheType.FullName}' in the DI container and was unable to create it!");
                 }
-                
+
                 menuItem.Item = userObject as IConsoleMenuItem;
 
                 if (menuItem.Item == null)
                 {
                     throw new ArgumentException($"The {menuItem.TheType.FullName} does NOT implement the IConsoleMenuItem interface!");
                 }
+
+                // Assign the optional data to the now instantiated object.
+                menuItem.Item.AttributeData = menuItem.Attribute.Data;
             }
 
             var sortedResult = FixNumberAndSortOrder(menu);
 
             var exitItem = new ConsoleMenuItemWrapper
             {
-                Attribute = new ConsoleMenuItemAttribute(string.Empty), 
-                Item = _serviceProvider.GetService(typeof(IExitConsoleMenuItem)) as IExitConsoleMenuItem, 
+                Attribute = new ConsoleMenuItemAttribute(string.Empty),
+                Item = _serviceProvider.GetService(typeof(IExitConsoleMenuItem)) as IExitConsoleMenuItem,
                 ItemNumber = 0,
                 TheType = typeof(IExitConsoleMenuItem)
             };
@@ -222,7 +154,7 @@ namespace ConsoleMenuHelper
 
             return menu.OrderBy(o => o.ItemNumber).ThenBy(o => o.Item.ItemText).ToList();
         }
-        
+
         /// <summary>Removes white space, trims and then lower cases the menu name.</summary>
         /// <param name="menuName">The menu name</param>
         private static string NormalizeMenuName(string menuName)
@@ -230,5 +162,6 @@ namespace ConsoleMenuHelper
             if (string.IsNullOrWhiteSpace(menuName)) return null;
             return menuName.Trim().ToLower();
         }
+
     }
 }

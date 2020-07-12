@@ -1,4 +1,4 @@
-﻿namespace ConsoleMenuHelper.Helpers
+﻿namespace ConsoleMenuHelper
 {
     /// <summary>A wrapper around console commands.</summary>
     public interface IConsoleCommand

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace ConsoleMenuHelper.Helpers
+namespace ConsoleMenuHelper
 {
     /// <summary>Helps with retrieving console input</summary>
     public class PromptHelper : IPromptHelper

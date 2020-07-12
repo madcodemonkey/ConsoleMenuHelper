@@ -16,8 +16,8 @@ namespace Example1
             {
                 var menu = new ConsoleMenu();
 
-                menu.RegisterDependencies(RegisterMyItems);
-                menu.FindWorkers(Assembly.GetExecutingAssembly()); 
+                menu.AddDependencies(AddMyDependencies);
+                menu.AddMenuItemViaReflection(Assembly.GetExecutingAssembly()); 
             
                 await menu.DisplayMenuAsync("Hello1");
 
@@ -33,7 +33,7 @@ namespace Example1
             Console.ReadLine();
         }
 
-        static void RegisterMyItems(IServiceCollection serviceCollection)
+        static void AddMyDependencies(IServiceCollection serviceCollection)
         {
 
             // IConfiguration requires: Microsoft.Extensions.Configuration NuGet package

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ConsoleMenuHelper;
-using ConsoleMenuHelper.Helpers;
 
 namespace Example1
 {
@@ -31,5 +30,8 @@ namespace Example1
         }
 
         public string ItemText => "Ask me a question!";
+
+        /// <summary>Optional data from the attribute.</summary>
+        public string AttributeData { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ConsoleMenuHelper
+namespace ConsoleMenuHelper.Extensions
 {
     /// <summary>A place to hold non-creation reflection extensions.</summary>
     public static class ReflectionAttributeExtensions

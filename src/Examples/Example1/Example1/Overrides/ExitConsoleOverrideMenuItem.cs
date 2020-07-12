@@ -11,5 +11,9 @@ namespace Example1
         }
 
         public string ItemText => "Exit NOW!!";
+
+
+        /// <summary>Optional data from the attribute.</summary>
+        public string AttributeData { get; set; }
     }
 }

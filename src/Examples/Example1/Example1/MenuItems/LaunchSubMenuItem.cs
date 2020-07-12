@@ -20,5 +20,9 @@ namespace Example1
         }
 
         public string ItemText => "Show Hello 2 menu!";
+
+        
+        /// <summary>Optional data from the attribute.</summary>
+        public string AttributeData { get; set; }
     }
 }
