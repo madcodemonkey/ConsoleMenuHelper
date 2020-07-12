@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace ConsoleMenuHelper
 {
+    /// <summary>Extensions used with the IServiceProvider (dependency injection framework).</summary>
     public static class ServiceProviderExtensions
     {
         /// <summary>Creates an instance of an object, but obtains its dependencies from the service provider.</summary>

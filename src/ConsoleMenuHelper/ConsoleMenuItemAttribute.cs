@@ -6,11 +6,13 @@ namespace ConsoleMenuHelper
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true)]
     public class ConsoleMenuItemAttribute : Attribute
     {
+        /// <summary>Constructor</summary>
         public ConsoleMenuItemAttribute(string menuName)
         {
             MenuName = menuName;
         }
 
+        /// <summary>Constructor</summary>
         public ConsoleMenuItemAttribute(string menuName, int itemNumber)
         {
             MenuName = menuName;

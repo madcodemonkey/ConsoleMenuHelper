@@ -10,18 +10,27 @@ namespace Example1
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static async Task Main()
         {
-            var menu = new ConsoleMenu();
+            try
+            {
+                var menu = new ConsoleMenu();
 
-            menu.Register(RegisterMyItems);
-            menu.FindWorkers(Assembly.GetExecutingAssembly()); 
+                menu.RegisterDependencies(RegisterMyItems);
+                menu.FindWorkers(Assembly.GetExecutingAssembly()); 
             
-            await menu.WorkAsync("Hello1");
+                await menu.DisplayMenuAsync("Hello1");
 
-            await menu.WorkAsync("Hello2");
+                Console.WriteLine("Done!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
 
-            Console.WriteLine("Done!");
+            Console.WriteLine("Hit enter to exit");
+            Console.ReadLine();
         }
 
         static void RegisterMyItems(IServiceCollection serviceCollection)

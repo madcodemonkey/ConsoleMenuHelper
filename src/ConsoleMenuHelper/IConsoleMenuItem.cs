@@ -8,9 +8,9 @@ namespace ConsoleMenuHelper
     {
         /// <summary>Causes the worker to take control of the output.  Returns true if the
         /// screen should be cleared and main menu shown again on the screen; otherwise, false.</summary>
-        Task<bool> WorkAsync();
+        Task<ConsoleMenuItemResponse> WorkAsync();
 
-        /// <summary>This is the text used beside the number in the console application's main menu</summary>
-        string MenuItemText { get; }
+        /// <summary>This is the text used beside the number in the console application's menu</summary>
+        string ItemText { get; }
     }
 }
