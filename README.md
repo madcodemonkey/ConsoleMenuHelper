@@ -15,8 +15,8 @@ Install the [ConsoleMenuHelper Nuget package](https://www.nuget.org/packages/Con
 ## Step 3: Create some menu options
 You must decorate each menu item with the ConsoleMenuItem attribute and specify:
 1. Menu name "Hello1" in the example below.  Now all classes with "Hello1" are in the same menu.
-1. Optional: Add an option menu number.  If not specifed, one will be generated (sorted by ItemText and assigned sequentially)
-1. Optional: Add a data string.  It will be assigned to the AttributeData property once instatiated.
+1. Optional: Add a menu number.  If not specified, one will be generated (sorted by ItemText and assigned sequentially)
+1. Optional: Add a data string.  It will be assigned to the AttributeData property once instantiated.
 ```csharp
 using System;
 using System.Threading.Tasks;
@@ -156,7 +156,7 @@ class Program
 
 Notes
 - In this example, I'm using IConfiguration and ingecting it as a singleton so that my menu items can gain access to things in "appsettings.json"
-- You'll notice that I register ONE menu item manually. I did this because I attributed an INTERFACE and I need to specify the concrete class; otherwise, I'll get an exception.
+- You'll notice that I register ONE menu item manually. I did this because I attributed an INTERFACE and I need to specify the concrete class; otherwise, you will get an exception.
 - Finally, I show an example over overriding a built in menu item called IExitConsoleMenuItem.  It is injected into every menu to give you an option to exit with a value of zero.
 
 
