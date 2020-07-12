@@ -7,12 +7,16 @@
     <authors>David Yates</authors>
     <owners>David Yates</owners>
 	<license type="file">License\LICENSE</license>
-    <projectUrl>https://github.com/madcodemonkey/CsvConverter</projectUrl>
+    <projectUrl>https://github.com/madcodemonkey/ConsoleMenuHelper</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>Initial release.</releaseNotes>
     <copyright>2020</copyright>
     <tags>Console</tags>
+	
+    <dependencies>
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="3.1.5" />
+    </dependencies>    	 	
   </metadata>
   <files>
     <file src="..\..\LICENSE" target="License\LICENSE" />

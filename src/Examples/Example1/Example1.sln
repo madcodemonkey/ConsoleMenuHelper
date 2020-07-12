@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuHelper", "..\..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuHelper.Tests", "..\..\ConsoleMenuHelper.Tests\ConsoleMenuHelper.Tests.csproj", "{3F216F98-012E-4A5D-AE7B-5A871688AC96}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A63485E1-778D-4AB0-9E5B-F7BEAB3EF06A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{349669D1-83D1-4B72-9D4C-DF8C3ECB2932}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +34,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{115A72DE-C073-41C8-A3D4-772152B017E6} = {349669D1-83D1-4B72-9D4C-DF8C3ECB2932}
+		{3F216F98-012E-4A5D-AE7B-5A871688AC96} = {A63485E1-778D-4AB0-9E5B-F7BEAB3EF06A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26F56BE6-0235-461B-8879-F331DE2EB544}
