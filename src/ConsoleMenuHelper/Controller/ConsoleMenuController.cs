@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ConsoleMenuHelper.Helpers;
 
 namespace ConsoleMenuHelper
 {
@@ -10,14 +11,17 @@ namespace ConsoleMenuHelper
     public class ConsoleMenuController : IConsoleMenuController
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IConsoleCommand _console;
+        private readonly IPromptHelper _promptHelper;
         private readonly Dictionary<string, List<ConsoleMenuItemWrapper>> _menus = new Dictionary<string, List<ConsoleMenuItemWrapper>>();
         private readonly Stack<List<ConsoleMenuItemWrapper>> _menuQueue = new Stack<List<ConsoleMenuItemWrapper>>();
 
         /// <summary>Constructor</summary>
-        /// <param name="serviceProvider"></param>
-        public ConsoleMenuController(IServiceProvider serviceProvider)
+        public ConsoleMenuController(IServiceProvider serviceProvider, IConsoleCommand console, IPromptHelper promptHelper)
         {
             _serviceProvider = serviceProvider;
+            _console = console;
+            _promptHelper = promptHelper;
         }
 
         /// <summary>Displays a menu an prompts the user to select a menu item.</summary>
@@ -98,75 +102,52 @@ namespace ConsoleMenuHelper
         /// If the user selects an item, it works is performed on that selected item.</summary>
         private async Task<ConsoleMenuItemResponse> DoMenuItemWorkAsync()
         {
-            string input = Console.ReadLine();
-
+            int? userChoice = _promptHelper.GetNumber(null, 1);
+       
             var result = new ConsoleMenuItemResponse(false, true);
-
-            if (string.IsNullOrWhiteSpace(input))
+            
+            if (userChoice.HasValue)
             {
-                ShowOneMenu(true);
-                return result;
-            }
-
-            if (int.TryParse(input, out var numberInput))
-            {
-                if (numberInput == 0) return  new ConsoleMenuItemResponse(true, true);
-                
                 var currentMenuItems = _menuQueue.Peek();
 
-                var worker =  currentMenuItems.FirstOrDefault(w => w.ItemNumber == numberInput);
+                var worker =  currentMenuItems.FirstOrDefault(w => w.ItemNumber == userChoice.Value);
                 if (worker == null)
                 {
-                    Console.Clear();
-                    Console.WriteLine("*******Please enter a valid number*******");
-                    ShowOneMenu(false);
+                    ShowOneMenu(true);
+                    _console.WriteLine("*******Please enter a valid number*******");
                 }
                 else
                 {
                     result = await worker.Item.WorkAsync();
-                    ShowOneMenu( result.ClearScreen);
+                    ShowOneMenu(result.ClearScreen);
                 }
             }
             else
             {
-                Console.Clear();
-                Console.WriteLine("*******Please enter a valid number*******");
-                ShowOneMenu( false);
+                ShowOneMenu(true);
+                _console.WriteLine("*******Please enter a valid number*******");
             }
 
-            Console.WriteLine("--------------------------------");
             return result;
-
         }
 
         /// <summary>Shows one menu.</summary>
         /// <param name="clearScreen">Indicates if you would like to clear the screen.</param>
         private void ShowOneMenu(bool clearScreen)
         {
-
             if (clearScreen)
             {
-                Console.Clear();
+                _console.Clear();
             }
-            else
-            {
-                Console.WriteLine("--------------------------------");
-            }
-
-            if (_menuQueue.Count == 0)
-            {
-                return;
-            }
-
+          
             var currentMenuItems = _menuQueue.Peek();
 
             foreach (var menuItem in currentMenuItems)
             {
-                Console.WriteLine($"{menuItem.ItemNumber}. {menuItem.Item.ItemText}");
+                _console.WriteLine($"{menuItem.ItemNumber}. {menuItem.Item.ItemText}");
             }
-
-            Console.WriteLine("0. Exit");
-            Console.WriteLine("Hit enter to clear the screen and refresh the menu");
+            
+            _console.WriteLine("Hit enter to clear the screen and refresh the menu");
         }
 
 
@@ -195,8 +176,30 @@ namespace ConsoleMenuHelper
                     throw new ArgumentException($"The {menuItem.TheType.FullName} does NOT implement the IConsoleMenuItem interface!");
                 }
             }
-            
-            var result = menu.OrderBy(o => o.ItemNumber).ThenBy(o => o.Item.ItemText).ToList();
+
+            var sortedResult = FixNumberAndSortOrder(menu);
+
+            var exitItem = new ConsoleMenuItemWrapper
+            {
+                Attribute = new ConsoleMenuItemAttribute(string.Empty), 
+                Item = _serviceProvider.GetService(typeof(IExitConsoleMenuItem)) as IExitConsoleMenuItem, 
+                ItemNumber = 0,
+                TheType = typeof(IExitConsoleMenuItem)
+            };
+
+            sortedResult.Add(exitItem);
+
+            return sortedResult;
+        }
+
+        /// <summary>Fixes the numbering and then re-sorts the array</summary>
+        /// <param name="menu">Menu to fix and sort</param>
+        private List<ConsoleMenuItemWrapper> FixNumberAndSortOrder(List<ConsoleMenuItemWrapper> menu)
+        {
+            var result = menu
+                .OrderBy(o => o.ItemNumber)
+                .ThenBy(o => o.Item.ItemText)
+                .ToList();
 
             for (int i = 1; i <= menu.Count; i++)
             {
@@ -206,15 +209,14 @@ namespace ConsoleMenuHelper
                 if (menu1 == null) continue;
                 menu1.ItemNumber = i;
             }
-            
+
             return menu.OrderBy(o => o.ItemNumber).ThenBy(o => o.Item.ItemText).ToList();
         }
+
 
         /// <summary>Finds all classes that implement the <see cref="ConsoleMenuItemAttribute"/> and returns them as a list of types.</summary>
         private static List<Type> FindAllClassesThatImplementTheWorkerAttribute(Assembly assembly)
         {
-            // var assembly = Assembly.GetExecutingAssembly();
-
             var typesWithHelpAttribute =
                 (from type in assembly.GetTypes()
                     where type.IsDefined(typeof(ConsoleMenuItemAttribute), false)

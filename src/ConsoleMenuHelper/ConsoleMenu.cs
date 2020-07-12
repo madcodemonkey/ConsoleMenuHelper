@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using ConsoleMenuHelper.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConsoleMenuHelper
@@ -59,6 +60,9 @@ namespace ConsoleMenuHelper
         private void RegisterInternalDependencies(IServiceCollection collection)
         {
             collection.AddSingleton<IConsoleMenuController, ConsoleMenuController>();
+            collection.AddTransient<IExitConsoleMenuItem, ExitConsoleMenuItem>();
+            collection.AddTransient<IConsoleCommand, ConsoleCommand>();
+            collection.AddSingleton<IPromptHelper, PromptHelper>();
         }
     }
 }
