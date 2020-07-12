@@ -10,14 +10,14 @@ The ConsoleMenuHelper uses reflection to find menu items.  It then groups them b
 Create a .NET Core console application.
 
 ## Step 2: Install Nuget
-Install the Nuget package into your .NET project.
+Install the [ConsoleMenuHelper Nuget package](https://www.nuget.org/packages/ConsoleMenuHelper) into your .NET project.
 
 ## Step 3: Create some menu options
 You must decorate each menu item with the ConsoleMenuItem attribute and specify:
 1. Menu name "Hello1" in the example below.  Now all classes with "Hello1" are in the same menu.
 1. Optional: Add an option menu number.  If not specifed, one will be generated (sorted by ItemText and assigned sequentially)
 1. Optional: Add a data string.  It will be assigned to the AttributeData property once instatiated.
-```
+```csharp
 using System;
 using System.Threading.Tasks;
 using ConsoleMenuHelper;
@@ -57,7 +57,7 @@ public class DeveloperQuestionMenuItem : IConsoleMenuItem
 
 
 In this example, a menu item belongs to TWO different menus, Hello1 and Hello2
-```
+```csharp
 using System;
 using System.Threading.Tasks;
 using ConsoleMenuHelper;
