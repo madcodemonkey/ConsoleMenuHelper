@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example1", "Example1\Example1.csproj", "{115A72DE-C073-41C8-A3D4-772152B017E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example1", "Examples\Example1\Example1.csproj", "{115A72DE-C073-41C8-A3D4-772152B017E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuHelper", "..\..\ConsoleMenuHelper\ConsoleMenuHelper.csproj", "{D719C324-8E3D-457E-94CF-A88367CB70BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuHelper", "ConsoleMenuHelper\ConsoleMenuHelper.csproj", "{D719C324-8E3D-457E-94CF-A88367CB70BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuHelper.Tests", "..\..\ConsoleMenuHelper.Tests\ConsoleMenuHelper.Tests.csproj", "{3F216F98-012E-4A5D-AE7B-5A871688AC96}"
 EndProject
