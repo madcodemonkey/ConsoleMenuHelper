@@ -20,14 +20,14 @@
         /// <param name="promptMessage">An optional prompt that will be written to the screen before reading the input data.</param>
         /// <param name="ignoreCase">Indicates if the answers in the <paramref name="validAnswers"/> array are case sensitive.</param>
         /// <param name="validAnswers">The list of valid answers.</param>
-        string GetStringResponse(string promptMessage, bool ignoreCase, params string[] validAnswers);
+        string GetText(string promptMessage, bool ignoreCase, params string[] validAnswers);
 
         /// <summary>Gets text from the user.</summary>
-        /// <param name="prompt">The question to prompt with</param>
+        /// <param name="promptMessage">The question to prompt with</param>
         /// <param name="acceptBlank">Can the user enter blank or null (hit enter)</param>
         /// <param name="trimResult">Indicates if the text should be trimmed before returning</param>
         /// <returns></returns>
-        string GetText(string prompt, bool acceptBlank, bool trimResult);
+        string GetText(string promptMessage, bool acceptBlank, bool trimResult);
 
         /// <summary>Prompts with whatever the user passes in and requires the user to enter y or n</summary>
         bool GetYorN(string promptMessage);

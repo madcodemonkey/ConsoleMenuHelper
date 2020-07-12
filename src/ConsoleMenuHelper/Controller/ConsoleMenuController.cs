@@ -14,7 +14,7 @@ namespace ConsoleMenuHelper
         private readonly IConsoleCommand _console;
         private readonly IPromptHelper _promptHelper;
         private readonly Dictionary<string, List<ConsoleMenuItemWrapper>> _menus = new Dictionary<string, List<ConsoleMenuItemWrapper>>();
-        private readonly Stack<List<ConsoleMenuItemWrapper>> _menuQueue = new Stack<List<ConsoleMenuItemWrapper>>();
+        private readonly Stack<List<ConsoleMenuItemWrapper>> _menuStack = new Stack<List<ConsoleMenuItemWrapper>>();
 
         /// <summary>Constructor</summary>
         public ConsoleMenuController(IServiceProvider serviceProvider, IConsoleCommand console, IPromptHelper promptHelper)
@@ -40,7 +40,7 @@ namespace ConsoleMenuHelper
                 throw new ArgumentException($"{menuName} not found!");
             }
 
-            _menuQueue.Push(CreateMenuItems(_menus[normalizedMenuName]));
+            _menuStack.Push(CreateMenuItems(_menus[normalizedMenuName]));
 
             ShowOneMenu(true);
 
@@ -52,7 +52,7 @@ namespace ConsoleMenuHelper
             }
             while (response.ExitMenu == false);
 
-            _menuQueue.Pop();
+            _menuStack.Pop();
         }
 
         
@@ -61,7 +61,7 @@ namespace ConsoleMenuHelper
         /// it makes sure that it inherits from the <see cref="IConsoleMenuItem"/> interface.</summary>
         public void FindWorkers(Assembly assembly)
         {
-            var typesWithHelpAttribute = FindAllClassesThatImplementTheWorkerAttribute(assembly);
+            var typesWithHelpAttribute = assembly.HelpFindEverythingDecoratedWithThisAttribute(typeof(ConsoleMenuItemAttribute));
 
 
             foreach (Type oneType in typesWithHelpAttribute)
@@ -108,7 +108,7 @@ namespace ConsoleMenuHelper
             
             if (userChoice.HasValue)
             {
-                var currentMenuItems = _menuQueue.Peek();
+                var currentMenuItems = _menuStack.Peek();
 
                 var worker =  currentMenuItems.FirstOrDefault(w => w.ItemNumber == userChoice.Value);
                 if (worker == null)
@@ -140,7 +140,7 @@ namespace ConsoleMenuHelper
                 _console.Clear();
             }
           
-            var currentMenuItems = _menuQueue.Peek();
+            var currentMenuItems = _menuStack.Peek();
 
             foreach (var menuItem in currentMenuItems)
             {
@@ -222,19 +222,7 @@ namespace ConsoleMenuHelper
 
             return menu.OrderBy(o => o.ItemNumber).ThenBy(o => o.Item.ItemText).ToList();
         }
-
-
-        /// <summary>Finds all classes that implement the <see cref="ConsoleMenuItemAttribute"/> and returns them as a list of types.</summary>
-        private static List<Type> FindAllClassesThatImplementTheWorkerAttribute(Assembly assembly)
-        {
-            var typesWithHelpAttribute =
-                (from type in assembly.GetTypes()
-                    where type.IsDefined(typeof(ConsoleMenuItemAttribute), false)
-                    select type).ToList();
-
-            return typesWithHelpAttribute;
-        }
-
+        
         /// <summary>Removes white space, trims and then lower cases the menu name.</summary>
         /// <param name="menuName">The menu name</param>
         private static string NormalizeMenuName(string menuName)

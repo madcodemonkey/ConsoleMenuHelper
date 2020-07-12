@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using ConsoleMenuHelper;
 using ConsoleMenuHelper.Helpers;
-using Microsoft.Extensions.Configuration;
 
 namespace Example1
 {
@@ -10,12 +9,10 @@ namespace Example1
     [ConsoleMenuItem("Hello2")]
     public class WhatIsYourNameMenuItem : IConsoleMenuItem
     {
-        private readonly IConfiguration _configuration;
         private readonly IPromptHelper _promptHelper;
 
-        public WhatIsYourNameMenuItem(IConfiguration configuration, IPromptHelper promptHelper)
+        public WhatIsYourNameMenuItem(IPromptHelper promptHelper)
         {
-            _configuration = configuration;
             _promptHelper = promptHelper;
         }
 

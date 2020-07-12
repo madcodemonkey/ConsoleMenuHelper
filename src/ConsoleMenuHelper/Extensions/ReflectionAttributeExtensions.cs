@@ -8,6 +8,21 @@ namespace ConsoleMenuHelper
     /// <summary>A place to hold non-creation reflection extensions.</summary>
     public static class ReflectionAttributeExtensions
     {
+        /// <summary>Finds everything within an Assembly that is decorated with the specified attribute.
+        /// It returns a list of the types that are decorated with the attribute.</summary>
+        /// <param name="assembly">Assembly to scan</param>
+        /// <param name="attributeType">The type of the attribute</param>
+        /// <returns></returns>
+        public static List<Type> HelpFindEverythingDecoratedWithThisAttribute(this Assembly assembly, Type attributeType)
+        {
+            var typesWithHelpAttribute =
+                (from type in assembly.GetTypes()
+                    where type.IsDefined(attributeType, false)
+                    select type).ToList();
+
+            return typesWithHelpAttribute;
+        }
+
         /// <summary>Finds all the attributes of the specified type (T) on the class.</summary> 
         /// <typeparam name="T">The type to find</typeparam>
         /// <param name="theType">The type to search</param>

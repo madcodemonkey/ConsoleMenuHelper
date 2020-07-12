@@ -5,6 +5,7 @@ using System.Reflection;
 namespace ConsoleMenuHelper
 {
     /// <summary>Extensions used with the IServiceProvider (dependency injection framework).</summary>
+    /// <remarks>Code was found here: https://stackoverflow.com/a/40334745/97803 and slightly altered.</remarks>
     public static class ServiceProviderExtensions
     {
         /// <summary>Creates an instance of an object, but obtains its dependencies from the service provider.</summary>
@@ -29,16 +30,13 @@ namespace ConsoleMenuHelper
             return null;
         }
 
-        // https://stackoverflow.com/a/40334745/97803
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static TResult CreateInstance<TResult>(this IServiceProvider provider) where TResult : class
+        /// <summary>Creates an instance of an object, but obtains its dependencies from the service provider.</summary>
+        /// <param name="provider">The service provider that holds all the dependencies</param>
+        /// <returns>An instance of the object being created.</returns>
+        /// <remarks>Code was found here: https://stackoverflow.com/a/40334745/97803 (using altered version above).</remarks>
+        public static T CreateInstance<T>(this IServiceProvider provider) where T : class
         {
-            ConstructorInfo constructor = typeof(TResult).GetConstructors()[0];
+            ConstructorInfo constructor = typeof(T).GetConstructors()[0];
 
             if(constructor != null)
             {
@@ -48,7 +46,7 @@ namespace ConsoleMenuHelper
                     .Select(o => provider.GetService(o))
                     .ToArray();
 
-                return Activator.CreateInstance(typeof(TResult), args) as TResult;
+                return Activator.CreateInstance(typeof(T), args) as T;
             }
 
             return null;

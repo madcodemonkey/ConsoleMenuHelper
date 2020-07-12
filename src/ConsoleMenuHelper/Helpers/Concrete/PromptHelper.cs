@@ -84,7 +84,7 @@ namespace ConsoleMenuHelper.Helpers
         /// <param name="promptMessage">An optional prompt that will be written to the screen before reading the input data.</param>
         /// <param name="ignoreCase">Indicates if the answers in the <paramref name="validAnswers"/> array are case sensitive.</param>
         /// <param name="validAnswers">The list of valid answers.</param>
-        public string GetStringResponse(string promptMessage, bool ignoreCase, params string[] validAnswers)
+        public string GetText(string promptMessage, bool ignoreCase, params string[] validAnswers)
         {
             if (validAnswers == null || validAnswers.Length == 0) throw new ArgumentException("Please specify a valid answer array!");
 
@@ -111,16 +111,20 @@ namespace ConsoleMenuHelper.Helpers
 
 
         /// <summary>Gets text from the user.</summary>
-        /// <param name="prompt">The question to prompt with</param>
+        /// <param name="promptMessage">An optional prompt that will be written to the screen before reading the input data.</param>
         /// <param name="acceptBlank">Can the user enter blank or null (hit enter)</param>
         /// <param name="trimResult">Indicates if the text should be trimmed before returning</param>
         /// <returns></returns>
-        public string GetText(string prompt, bool acceptBlank, bool trimResult)
+        public string GetText(string promptMessage, bool acceptBlank, bool trimResult)
         {
             string input;
             do
             {
-                _console.WriteLine(prompt);
+                if (string.IsNullOrWhiteSpace(promptMessage) == false)
+                {
+                    _console.WriteLine(promptMessage);
+                }
+
                 input = _console.ReadLine();
                 if (acceptBlank)
                 {
@@ -142,9 +146,8 @@ namespace ConsoleMenuHelper.Helpers
         /// <summary>Prompts with whatever the user passes in and requires the user to enter y or n</summary>
         public bool GetYorN(string promptMessage)
         {
-            string promptToUse = string.IsNullOrWhiteSpace(promptMessage) ? "Do you wish to proceed?" : promptMessage;
-            string result = GetStringResponse(promptToUse, true, "y", "n");
-            return result == "y";
+            string result = GetText(promptMessage, true, "y", "n");
+            return result.ToLower() == "y";
         }
 
         /// <summary>Builds a string of valid answers for the user.</summary>
