@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example1", "Examples\Exampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuHelper", "ConsoleMenuHelper\ConsoleMenuHelper.csproj", "{D719C324-8E3D-457E-94CF-A88367CB70BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuHelper.Tests", "..\..\ConsoleMenuHelper.Tests\ConsoleMenuHelper.Tests.csproj", "{3F216F98-012E-4A5D-AE7B-5A871688AC96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuHelper.Tests", "ConsoleMenuHelper.Tests\ConsoleMenuHelper.Tests.csproj", "{3F216F98-012E-4A5D-AE7B-5A871688AC96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A63485E1-778D-4AB0-9E5B-F7BEAB3EF06A}"
 EndProject
