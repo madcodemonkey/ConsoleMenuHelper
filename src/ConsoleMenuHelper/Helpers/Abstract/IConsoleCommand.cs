@@ -1,10 +1,15 @@
-﻿namespace ConsoleMenuHelper
+﻿using System;
+
+namespace ConsoleMenuHelper
 {
     /// <summary>A wrapper around console commands.</summary>
     public interface IConsoleCommand
     {
         /// <summary>Clears the screen</summary>
         void Clear();
+
+        /// <summary>Obtains then next key that is pressed.</summary>
+        ConsoleKeyInfo ReadKey();
 
         /// <summary>Reads a line using the Console's ReadLine method.</summary>
         string ReadLine();

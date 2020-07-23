@@ -11,6 +11,12 @@ namespace ConsoleMenuHelper
             Console.Clear();
         }
 
+        /// <summary>Obtains then next key that is pressed.</summary>
+        public ConsoleKeyInfo ReadKey()
+        {
+            return Console.ReadKey();
+        }
+
         /// <summary>Reads a line using the Console's ReadLine method.</summary>
         public string ReadLine()
         {

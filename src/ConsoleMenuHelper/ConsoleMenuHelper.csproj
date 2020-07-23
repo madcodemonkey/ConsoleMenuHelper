@@ -3,12 +3,13 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
-		<Description>Used to create .NET Core console applications with menus. It uses reflection to find the menu items and builds the menus for you so that you can focus on the work the menu item does.  It also has a dependency injection framework that can be used to populate menu item works.  This project was originally developed to help me test Azure Functions.</Description>
+		<Description>Used to create .NET Core console applications with menus. It uses reflection to find the menu items and builds the menus for you so that you can focus on the work that the menu item perform.  It also uses Microsoft's dependency injection framework that can be used to inject dependencies into menu items.  This project was originally developed to help me test Azure Functions.</Description>
 		<Authors>David Yates</Authors>
 		<Copyright>2020</Copyright>
 		<PackageProjectUrl>https://github.com/madcodemonkey/ConsoleMenuHelper</PackageProjectUrl>
 		<PackageTags>Console</PackageTags>
 		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
+		<AssemblyVersion>1.0.0.1</AssemblyVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
