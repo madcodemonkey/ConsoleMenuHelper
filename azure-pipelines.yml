@@ -15,7 +15,9 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@1
+- task: NuGetToolInstaller@0
+  inputs:
+    versionSpec: 5.6.0
 
 - task: NuGetCommand@2
   inputs:
