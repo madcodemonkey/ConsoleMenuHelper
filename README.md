@@ -1,4 +1,4 @@
-# Work in progress....
+# Documenation is still a work in progress....
 
 # ConsoleMenuHelper
 Used to create .NET Core console applications with menus.  It uses reflection to find the menu items and builds the menus for you so that you can focus on the work the menu item does.  It was originally developed to help me test Azure Functions.
@@ -155,7 +155,7 @@ class Program
 ```
 
 Notes
-- In this example, I'm using IConfiguration and ingecting it as a singleton so that my menu items can gain access to things in "appsettings.json"
+- In this example, I'm using IConfiguration and injecting it as a singleton so that my menu items can gain access to things in "appsettings.json"
 - You'll notice that I register ONE menu item manually. I did this because I attributed an INTERFACE and I need to specify the concrete class; otherwise, you will get an exception.
 - Finally, I show an example over overriding a built in menu item called IExitConsoleMenuItem.  It is injected into every menu to give you an option to exit with a value of zero.
 
