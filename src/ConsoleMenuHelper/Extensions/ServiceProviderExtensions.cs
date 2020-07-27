@@ -14,20 +14,23 @@ namespace ConsoleMenuHelper.Extensions
         /// <returns>An instance of the object being created.</returns>
         public static object CreateInstance(this IServiceProvider provider, Type theType)
         {
-            ConstructorInfo constructor = theType.GetConstructors()[0];
+            ConstructorInfo[] constructorArray = theType.GetConstructors();
 
-            if (constructor != null)
+            if (constructorArray.Length == 0)
             {
-                object[] args = constructor
-                    .GetParameters()
-                    .Select(o => o.ParameterType)
-                    .Select(o => provider.GetService(o))
-                    .ToArray();
-
-                return Activator.CreateInstance(theType, args);
+                return null;
             }
 
-            return null;
+            ConstructorInfo constructor = theType.GetConstructors()[0];
+
+
+            object[] args = constructor
+                .GetParameters()
+                .Select(o => o.ParameterType)
+                .Select(o => provider.GetService(o))
+                .ToArray();
+
+            return Activator.CreateInstance(theType, args);
         }
 
         /// <summary>Creates an instance of an object, but obtains its dependencies from the service provider.</summary>

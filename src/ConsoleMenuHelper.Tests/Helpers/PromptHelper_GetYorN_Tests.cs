@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ConsoleMenuHelper.Tests.Helpers
@@ -16,8 +17,11 @@ namespace ConsoleMenuHelper.Tests.Helpers
         public void ContinuesToPromptTillItGetsTheCorrectAnswer()
         {
             // Arrange
-            _mockConsole.SetupSequence(s => s.ReadLine())
-                .Returns("jack").Returns((string)null).Returns("").Returns(" ").Returns("z").Returns("james").Returns("Y");
+            _mockConsole.SetupSequence(s => s.ReadKey())
+                .Returns(new ConsoleKeyInfo(' ', ConsoleKey.Spacebar, false, false, false))
+                .Returns(new ConsoleKeyInfo('z', ConsoleKey.Z, false, false, false))
+                .Returns(new ConsoleKeyInfo('s', ConsoleKey.S, false, false, false))
+                .Returns(new ConsoleKeyInfo('Y', ConsoleKey.Y, true, false, false));
             
             var cut = new PromptHelper(_mockConsole.Object);
 
@@ -37,7 +41,7 @@ namespace ConsoleMenuHelper.Tests.Helpers
         public void UsesThePromptIfGivenOne(string promptMessage, int numberOfTimesPrompted, string message)
         {
             // Arrange
-            _mockConsole.Setup(s => s.ReadLine()).Returns("n");
+            _mockConsole.Setup(s => s.ReadKey()).Returns(new ConsoleKeyInfo('n', ConsoleKey.N, false, false, false));
             
             var cut = new PromptHelper(_mockConsole.Object);
 

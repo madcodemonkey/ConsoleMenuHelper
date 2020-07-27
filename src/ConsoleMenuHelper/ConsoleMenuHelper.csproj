@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -8,10 +8,10 @@
 		<Copyright>2020</Copyright>
 		<PackageProjectUrl>https://github.com/madcodemonkey/ConsoleMenuHelper</PackageProjectUrl>
 		<PackageTags>Console</PackageTags>
-		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
-		<AssemblyVersion>1.0.0.1</AssemblyVersion>
-		<FileVersion>1.0.0.1</FileVersion>
-		<Version>1.0.0.1</Version>
+		<PackageReleaseNotes>Fixed index out of range error when protected constructor is accidently used.  I now provide a better error message.  PromptHelper now has a GetCharacter method.  Modified PromptHelper GetYorN method to use the new GetCharacter method.</PackageReleaseNotes>
+		<AssemblyVersion>1.0.0.2</AssemblyVersion>
+		<FileVersion>1.0.0.2</FileVersion>
+		<Version>1.0.0.2</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

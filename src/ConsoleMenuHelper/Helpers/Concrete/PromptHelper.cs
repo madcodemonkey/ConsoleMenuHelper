@@ -15,6 +15,40 @@ namespace ConsoleMenuHelper
             _console = console;
         }
 
+        /// <summary>Prompts with whatever the user passes in and requires the user to enter one of the valid answers</summary>
+        /// <param name="promptMessage">An optional prompt that will be written to the screen before reading the input data.</param>
+        /// <param name="ignoreCase">Indicates if the answers in the <paramref name="validAnswers"/> array are case sensitive.</param>
+        /// <param name="validAnswers">The list of valid answers.</param>
+        public char GetCharacter(string promptMessage, bool ignoreCase, params char[] validAnswers)
+        {
+            if (validAnswers == null || validAnswers.Length == 0) throw new ArgumentException("Please specify a valid answer array!");
+
+            string validAnswerSting = BuildAnswerString(validAnswers);
+
+            while (true)
+            {
+                if (string.IsNullOrWhiteSpace(promptMessage) == false)
+                {
+                    _console.WriteLine(promptMessage);
+                }
+
+                _console.WriteLine(validAnswerSting);
+                ConsoleKeyInfo someKey = _console.ReadKey();
+
+                // So that no text written after the user gives an answer is on the same line...
+                Console.WriteLine(""); 
+
+                foreach (var validAnswer in validAnswers)
+                {
+                    if (someKey.KeyChar.ToString().Equals(validAnswer.ToString(), ignoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture))
+                    {
+                        return someKey.KeyChar;
+                    }
+                }
+            }
+        }
+
+
         /// <summary>Gets a number the specified number of times before giving up.  Returns null if no number was collected; otherwise, you get a number.</summary>
         /// <param name="promptMessage">An optional prompt that will be written to the screen before reading the input data.</param>
         /// <param name="numberOfAttempts">Number of attempts to make before returning.</param>
@@ -108,8 +142,7 @@ namespace ConsoleMenuHelper
                 }
             }
         }
-
-
+        
         /// <summary>Gets text from the user.</summary>
         /// <param name="promptMessage">An optional prompt that will be written to the screen before reading the input data.</param>
         /// <param name="acceptBlank">Can the user enter blank or null (hit enter)</param>
@@ -146,8 +179,8 @@ namespace ConsoleMenuHelper
         /// <summary>Prompts with whatever the user passes in and requires the user to enter y or n</summary>
         public bool GetYorN(string promptMessage)
         {
-            string result = GetText(promptMessage, true, "y", "n");
-            return result.ToLower() == "y";
+            char result = GetCharacter(promptMessage, true, 'y', 'n');
+            return result == 'y' || result == 'Y';
         }
 
         /// <summary>Builds a string of valid answers for the user.</summary>
@@ -180,7 +213,39 @@ namespace ConsoleMenuHelper
             sb.Append(" and hit enter)");
 
             return sb.ToString();
+        }
 
+        /// <summary>Builds a string of valid answers for the user.</summary>
+        /// <param name="validAnswers">Possible answers</param>
+        /// <returns></returns>
+        private string BuildAnswerString(char[] validAnswers)
+        {
+            var sb = new StringBuilder("(Enter ");
+
+            for (var index = 0; index < validAnswers.Length; index++)
+            {
+                var validAnswer = validAnswers[index];
+
+                if (index == 0)
+                {
+                    sb.Append(validAnswer);
+                }
+                else if (index == validAnswers.Length - 1)
+                {
+                    // Last item
+                    sb.Append($" or {validAnswer}");
+                }
+                else
+                {
+                    // Somewhere in the middle
+                    sb.AppendFormat(", {0}", validAnswer);
+                }
+            }
+
+            sb.Append(" and hit enter)");
+
+         
+            return sb.ToString();
         }
     }
 }
