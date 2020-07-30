@@ -19,7 +19,7 @@ namespace Example1
                 menu.AddDependencies(AddMyDependencies);
                 menu.AddMenuItemViaReflection(Assembly.GetExecutingAssembly()); 
             
-                await menu.DisplayMenuAsync("Hello1");
+                await menu.DisplayMenuAsync("Hello1", "Main");
 
                 Console.WriteLine("Done!");
             }
