@@ -11,7 +11,7 @@ namespace ConsoleMenuHelper
         private readonly IConsoleMenuRepository _menuRepository;
         private readonly IConsoleCommand _console;
         private readonly IPromptHelper _promptHelper;
-        private readonly Stack<List<ConsoleMenuItemWrapper>> _menuStack = new Stack<List<ConsoleMenuItemWrapper>>();
+        private readonly Stack<ConsoleMenuWrapper> _menuStack = new Stack<ConsoleMenuWrapper>();
 
         /// <summary>Constructor</summary>
         public ConsoleMenuController(IConsoleMenuRepository menuRepository, IConsoleCommand console, IPromptHelper promptHelper)
@@ -25,25 +25,71 @@ namespace ConsoleMenuHelper
         /// <param name="menuName">The name of the menu (it's NOT case sensitive)</param>
         public async Task DisplayMenuAsync(string menuName)
         {
+            await DisplayMenuAsync(menuName, string.Empty, BreadCrumbType.None);
+        }
+
+        /// <summary>Displays a menu an prompts the user to select a menu item.</summary>
+        /// <param name="menuName">The name of the menu (it's NOT case sensitive)</param>
+        /// <param name="title">The title of the menu</param>
+        public async Task DisplayMenuAsync(string menuName, string title)
+        {
+            await DisplayMenuAsync(menuName, title, BreadCrumbType.None);
+        }
+
+        /// <summary>Displays a menu an prompts the user to select a menu item.</summary>
+        /// <param name="menuName">The name of the menu (it's NOT case sensitive)</param>
+        /// <param name="title">The title of the menu</param>
+        /// <param name="breadCrumbType">The type of breadcrumb trail you would like to see.</param>
+        public async Task DisplayMenuAsync(string menuName, string title, BreadCrumbType breadCrumbType)
+        {
             var menuList = _menuRepository.LoadMenus(menuName);
 
             var instantiatedMenuList = _menuRepository.CreateMenuItems(menuList);
 
-            _menuStack.Push(instantiatedMenuList);
-
-            ShowOneMenu(true);
-
-            ConsoleMenuItemResponse response;
-
-            do
+            var newMenu = new ConsoleMenuWrapper
             {
-                response = await DoWorkAsync();
+                Title = title,
+                BreadCrumbTitle = BuildBreadCrumbTrail(breadCrumbType, title),
+                MenuItems = instantiatedMenuList
+            };
+
+            _menuStack.Push(newMenu);
+
+            bool clearScreen = true;
+
+            while(true)
+            {
+                ShowOneMenu(clearScreen);
+
+                ConsoleMenuItemResponse response = await DoWorkAsync();
+                
+                if (response.ExitMenu) break;
+                
+                clearScreen = response.ClearScreen;
             }
-            while (response.ExitMenu == false);
 
             _menuStack.Pop();
         }
-        
+
+        /// <summary>Creates a breadcrumb trail.</summary>
+        /// <param name="breadCrumbType">The type of breadcrumb trail you would like to see.</param>
+        /// <param name="title">The title of the menu</param>
+        private string BuildBreadCrumbTrail(BreadCrumbType breadCrumbType, string title)
+        {          
+            if (breadCrumbType == BreadCrumbType.None) return string.Empty;
+            
+            var currentMenu = _menuStack.Count > 0 ? _menuStack.Peek() : null;
+
+            if (currentMenu == null || string.IsNullOrWhiteSpace(currentMenu.Title)) return title;
+
+            if (breadCrumbType == BreadCrumbType.ParentOnly || string.IsNullOrWhiteSpace(currentMenu.BreadCrumbTitle))
+            {
+                return $"{currentMenu.Title} > {title}";
+            }
+
+            return $"{currentMenu.BreadCrumbTitle} > {title}";
+        }
+
         /// <summary>Displays the menu and attempts to get a menu item select from the user.
         /// If the user selects an item, it works is performed on that selected item.</summary>
         private async Task<ConsoleMenuItemResponse> DoWorkAsync()
@@ -56,7 +102,7 @@ namespace ConsoleMenuHelper
             {
                 var currentMenuItems = _menuStack.Peek();
 
-                var worker =  currentMenuItems.FirstOrDefault(w => w.ItemNumber == userChoice.Value);
+                var worker =  currentMenuItems.MenuItems.FirstOrDefault(w => w.ItemNumber == userChoice.Value);
                 if (worker == null)
                 {
                     ShowOneMenu(true);
@@ -65,7 +111,6 @@ namespace ConsoleMenuHelper
                 else
                 {
                     result = await worker.Item.WorkAsync();
-                    ShowOneMenu(result.ClearScreen);
                 }
             }
             else
@@ -86,9 +131,16 @@ namespace ConsoleMenuHelper
                 _console.Clear();
             }
           
-            var currentMenuItems = _menuStack.Peek();
+            var currentMenu = _menuStack.Peek();
 
-            foreach (var menuItem in currentMenuItems)
+            string title = string.IsNullOrWhiteSpace(currentMenu.BreadCrumbTitle) ? currentMenu.Title : currentMenu.BreadCrumbTitle;
+
+            if (string.IsNullOrWhiteSpace(title) == false)
+            {
+                _console.WriteLine(title);
+            }
+
+            foreach (var menuItem in currentMenu.MenuItems)
             {
                 _console.WriteLine($"{menuItem.ItemNumber}. {menuItem.Item.ItemText}");
             }

@@ -15,7 +15,7 @@ namespace Example1
 
         public async Task<ConsoleMenuItemResponse> WorkAsync()
         {
-            await _menuController.DisplayMenuAsync("Hello2");
+            await _menuController.DisplayMenuAsync("Hello2", "Hello Two", BreadCrumbType.Concatenate);
             return await Task.FromResult(new ConsoleMenuItemResponse(false, true));
         }
 

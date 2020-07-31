@@ -20,9 +20,17 @@ namespace ConsoleMenuHelper
         /// <param name="menuName">The first main's name</param>
         public async Task DisplayMenuAsync(string menuName)
         {
+            await DisplayMenuAsync(menuName, string.Empty);
+        }
+
+        /// <summary>Show the first menu.</summary>
+        /// <param name="menuName">The first main's name</param>
+        /// <param name="title">Menu title</param>
+        public async Task DisplayMenuAsync(string menuName, string title)
+        {
             if (_dependenciesAdded == false) AddDependencies(null);
 
-            await _menuController.DisplayMenuAsync(menuName);
+            await _menuController.DisplayMenuAsync(menuName, title);
         }
 
         /// <summary>Finds all the classes and interfaces that are decorated with the <see cref="ConsoleMenuItemAttribute"/> attribute.
