@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConsoleMenuHelper.Core;
@@ -56,15 +55,18 @@ namespace ConsoleMenuHelper
 
             _menuStack.Push(newMenu);
 
-            ShowOneMenu(true);
+            bool clearScreen = true;
 
-            ConsoleMenuItemResponse response;
-
-            do
+            while(true)
             {
-                response = await DoWorkAsync();
+                ShowOneMenu(clearScreen);
+
+                ConsoleMenuItemResponse response = await DoWorkAsync();
+                
+                if (response.ExitMenu) break;
+                
+                clearScreen = response.ClearScreen;
             }
-            while (response.ExitMenu == false);
 
             _menuStack.Pop();
         }
@@ -75,8 +77,8 @@ namespace ConsoleMenuHelper
         private string BuildBreadCrumbTrail(BreadCrumbType breadCrumbType, string title)
         {          
             if (breadCrumbType == BreadCrumbType.None) return string.Empty;
-
-            var currentMenu = _menuStack.Peek();
+            
+            var currentMenu = _menuStack.Count > 0 ? _menuStack.Peek() : null;
 
             if (currentMenu == null || string.IsNullOrWhiteSpace(currentMenu.Title)) return title;
 
@@ -109,7 +111,6 @@ namespace ConsoleMenuHelper
                 else
                 {
                     result = await worker.Item.WorkAsync();
-                    ShowOneMenu(result.ClearScreen);
                 }
             }
             else

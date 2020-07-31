@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/madcodemonkey/ConsoleMenuHelper</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Initial release.</releaseNotes>
+    <releaseNotes>Adding menu title and a breadcrumb option.</releaseNotes>
     <copyright>2020</copyright>
     <tags>Console</tags>	
     <dependencies>
