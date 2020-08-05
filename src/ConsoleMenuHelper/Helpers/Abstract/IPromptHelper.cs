@@ -30,6 +30,10 @@
         string GetText(string promptMessage, bool acceptBlank, bool trimResult);
 
         /// <summary>Prompts with whatever the user passes in and requires the user to enter y or n</summary>
-        bool GetYorN(string promptMessage);
+        /// <param name="promptMessage">The question to prompt with</param>
+        /// <param name="makeUserHitEnter">If true, the user will be allowed to enter multiple characters and must hit enter (used  GetText behind the scene);
+        /// otherwise, we will collect one character and immediately return the answer and the user does NOT have to hit enter.</param>
+        /// <returns></returns>
+        bool GetYorN(string promptMessage, bool makeUserHitEnter = false);
     }
 }

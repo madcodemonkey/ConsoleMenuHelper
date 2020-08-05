@@ -14,7 +14,23 @@ namespace ConsoleMenuHelper.Tests.Helpers
         }
 
         [TestMethod]
-        public void ContinuesToPromptTillItGetsTheCorrectAnswer()
+        public void ReadLineImplementation_ContinuesToPromptTillItGetsTheCorrectAnswer()
+        {
+            // Arrange
+            _mockConsole.SetupSequence(s => s.ReadLine())
+                .Returns(" ").Returns("z").Returns("s").Returns("Y");
+            
+            var cut = new PromptHelper(_mockConsole.Object);
+
+            // Act
+            var actualResult = cut.GetYorN("Shall I proceed?", true);
+            
+            // Assert
+            Assert.IsTrue(actualResult);
+        }
+
+        [TestMethod]
+        public void  ReadKeyImplementation_ContinuesToPromptTillItGetsTheCorrectAnswer()
         {
             // Arrange
             _mockConsole.SetupSequence(s => s.ReadKey())
@@ -26,7 +42,7 @@ namespace ConsoleMenuHelper.Tests.Helpers
             var cut = new PromptHelper(_mockConsole.Object);
 
             // Act
-            var actualResult = cut.GetYorN("Shall I proceed?");
+            var actualResult = cut.GetYorN("Shall I proceed?", false);
             
             // Assert
             Assert.IsTrue(actualResult);
@@ -38,7 +54,7 @@ namespace ConsoleMenuHelper.Tests.Helpers
         [DataRow(" ", 0, "No prompt specified so nothing should be called!")]
         [DataRow("?", 1, "Called once because we return a valid answer ('n')")]
         [DataRow("What's your name?", 1, "Called once because we return a valid answer ('n')")]
-        public void UsesThePromptIfGivenOne(string promptMessage, int numberOfTimesPrompted, string message)
+        public void ReadKeyImplementation_UsesThePromptIfGivenOne(string promptMessage, int numberOfTimesPrompted, string message)
         {
             // Arrange
             _mockConsole.Setup(s => s.ReadKey()).Returns(new ConsoleKeyInfo('n', ConsoleKey.N, false, false, false));
@@ -46,7 +62,28 @@ namespace ConsoleMenuHelper.Tests.Helpers
             var cut = new PromptHelper(_mockConsole.Object);
 
             // Act
-            cut.GetYorN(promptMessage);
+            cut.GetYorN(promptMessage, false);
+            
+            // Assert
+            _mockConsole.Verify(v => v.WriteLine(promptMessage), Times.Exactly(numberOfTimesPrompted), message);
+        }  
+
+        
+        [DataTestMethod]
+        [DataRow(null, 0, "No prompt specified so nothing should be called!")]
+        [DataRow("", 0, "No prompt specified so nothing should be called!")]
+        [DataRow(" ", 0, "No prompt specified so nothing should be called!")]
+        [DataRow("?", 1, "Called once because we return a valid answer ('n')")]
+        [DataRow("What's your name?", 1, "Called once because we return a valid answer ('n')")]
+        public void ReadLineImplementation_UsesThePromptIfGivenOne(string promptMessage, int numberOfTimesPrompted, string message)
+        {
+            // Arrange
+            _mockConsole.Setup(s => s.ReadLine()).Returns("n");
+            
+            var cut = new PromptHelper(_mockConsole.Object);
+
+            // Act
+            cut.GetYorN(promptMessage, true);
             
             // Assert
             _mockConsole.Verify(v => v.WriteLine(promptMessage), Times.Exactly(numberOfTimesPrompted), message);

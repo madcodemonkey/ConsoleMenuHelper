@@ -15,7 +15,7 @@ namespace Example1
 
         public async Task<ConsoleMenuItemResponse> WorkAsync()
         {
-            if (_promptHelper.GetYorN("Are you a developer?"))
+            if (_promptHelper.GetYorN("Are you a developer?", false))
             {
                 Console.WriteLine("Use the source Luke!");
             }
