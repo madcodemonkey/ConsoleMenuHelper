@@ -9,9 +9,9 @@
 		<PackageProjectUrl>https://github.com/madcodemonkey/ConsoleMenuHelper</PackageProjectUrl>
 		<PackageTags>Console</PackageTags>
 		<PackageReleaseNotes>Update the nuspec file till I get this linked!</PackageReleaseNotes>
-		<AssemblyVersion>1.0.0.3</AssemblyVersion>
-		<FileVersion>1.0.0.2</FileVersion>
-		<Version>1.0.0.3</Version>
+		<AssemblyVersion>1.0.0.4</AssemblyVersion>
+		<FileVersion>1.0.0.4</FileVersion>
+		<Version>1.0.0.4</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

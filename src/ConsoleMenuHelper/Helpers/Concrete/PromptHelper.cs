@@ -177,10 +177,20 @@ namespace ConsoleMenuHelper
         }
 
         /// <summary>Prompts with whatever the user passes in and requires the user to enter y or n</summary>
-        public bool GetYorN(string promptMessage)
+        /// <param name="promptMessage">The question to prompt with</param>
+        /// <param name="makeUserHitEnter">If true, the user will be allowed to enter multiple characters and must hit enter (used  GetText behind the scene);
+        /// otherwise, we will collect one character and immediately return the answer and the user does NOT have to hit enter.</param>
+        /// <returns></returns>
+        public bool GetYorN(string promptMessage, bool makeUserHitEnter = false)
         {
-            char result = GetCharacter(promptMessage, true, 'y', 'n');
-            return result == 'y' || result == 'Y';
+            if (makeUserHitEnter)
+            {
+                string stringResult = GetText(promptMessage, true, "y", "n");
+                return stringResult == "y" || stringResult == "Y";
+            }
+
+            char charResult = GetCharacter(promptMessage, true, 'y', 'n');
+            return charResult == 'y' || charResult == 'Y';
         }
 
         /// <summary>Builds a string of valid answers for the user.</summary>
@@ -242,7 +252,7 @@ namespace ConsoleMenuHelper
                 }
             }
 
-            sb.Append(" and hit enter)");
+            sb.Append(")");
 
          
             return sb.ToString();

@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/madcodemonkey/ConsoleMenuHelper</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Adding menu title and a breadcrumb option.</releaseNotes>
+    <releaseNotes>All user to specify if GetYorN should require a carriage return or not.</releaseNotes>
     <copyright>2020</copyright>
     <tags>Console</tags>	
     <dependencies>
